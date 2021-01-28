@@ -10,7 +10,7 @@ namespace NullFX.CRC.Benchmarks
 	{
 		public const int Seed = 1337;
 		
-		[Params(10, 100, 1000)]
+		[Params(1000)]
 		public int ArraySize { get; set; }
 
 		private byte[] data;
@@ -37,36 +37,50 @@ namespace NullFX.CRC.Benchmarks
 			var hash = NullFX.CRC.Crc8.ComputeChecksum(data, 0, ArraySize);
 			return hash;
 		}
-
+		
 		[Benchmark]
+		public byte NullFxCrc8Unrolled()
+		{
+			var hash = NullFX.CRC.Crc8.ComputeChecksumUnrolled(data, 0, ArraySize);
+			return hash;
+		}
+		
+		//[Benchmark]
+		public byte NullFxCrc8Simple()
+		{
+			var hash = NullFX.CRC.Crc8.ComputeChecksumSimple(data);
+			return hash;
+		}
+
+		//[Benchmark]
 		public ushort NullFxCrc16()
 		{
 			var hash = NullFX.CRC.Crc16.ComputeChecksum(Crc16Algorithm.Standard, data, 0, ArraySize);
 			return hash;
 		}
 		
-		[Benchmark]
+		//[Benchmark]
 		public uint NullFxCrc32()
 		{
 			var hash = NullFX.CRC.Crc32.ComputeChecksum(data, 0, ArraySize);
 			return hash;
 		}
-
-		[Benchmark]
+		
+		//[Benchmark]
 		public byte[] DataHashFunctionCrc8()
 		{
 			var hash = crc8Provider.ComputeHash(data);
 			return hash.Hash;
 		}
 		
-		[Benchmark]
+		//[Benchmark]
 		public byte[] DataHashFunctionCrc16()
 		{
 			var hash = crc16Provider.ComputeHash(data);
 			return hash.Hash;
 		}
 		
-		[Benchmark]
+		//[Benchmark]
 		public byte[] DataHashFunctionCrc32()
 		{
 			var hash = crc32Provider.ComputeHash(data);

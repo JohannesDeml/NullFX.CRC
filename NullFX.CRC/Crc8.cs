@@ -63,5 +63,35 @@ namespace NullFX.CRC {
             }
             return crc;
         }
+        
+        public static byte ComputeChecksumUnrolled ( byte[] bytes, int start, int length ) {
+            if ( bytes == null ) { throw new ArgumentNullException ( nameof ( bytes ) ); }
+            if ( bytes.Length == 0 ) { throw new ArgumentOutOfRangeException ( nameof ( bytes.Length ) ); }
+            if ( start < 0 ) { throw new ArgumentOutOfRangeException ( nameof ( start ) ); }
+            if ( start >= bytes.Length && length > 1 ) { throw new ArgumentOutOfRangeException ( nameof ( start ) ); }
+            var crc = InitialValue;
+            var end = start + length - 1;
+            if ( end > bytes.Length ) { throw new ArgumentOutOfRangeException ( nameof ( length ) ); }
+            if ( length < 0 ) { throw new ArgumentOutOfRangeException ( nameof ( length ) ); }
+            for ( int i = start; i <= end; i+= 8 ) {
+                crc = table[crc ^ bytes[i]];
+                crc = table[crc ^ bytes[i+1]];
+                crc = table[crc ^ bytes[i+2]];
+                crc = table[crc ^ bytes[i+3]];
+                crc = table[crc ^ bytes[i+4]];
+                crc = table[crc ^ bytes[i+5]];
+                crc = table[crc ^ bytes[i+6]];
+                crc = table[crc ^ bytes[i+7]];
+            }
+            return crc;
+        }
+        
+        public static byte ComputeChecksumSimple ( byte[] bytes ) {
+            var crc = InitialValue;
+            for ( int i = 0; i < bytes.Length; ++i ) {
+                crc = table[crc ^ bytes[i]];
+            }
+            return crc;
+        }
     }
 }
